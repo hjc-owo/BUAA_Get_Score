@@ -6,10 +6,15 @@ from email.mime.text import MIMEText
 
 import requests
 
-MAIL_HOST = "smtp.qq.com"  # 设置SMTP服务器，如smtp.qq.com smtp.163.com
-MAIL_USER = "******@qq.com"  # 发送邮箱的用户名，如xxxxxx@qq.com xxx@163.com
-MAIL_PASS = "**********"  # 发送邮箱的密码（注：QQ邮箱需要开启SMTP服务后在此填写授权码）
-RECEIVER = "******@qq.com"  # 收件邮箱，格式同发件邮箱
+# MAIL_HOST = "smtp.qq.com"  # 设置SMTP服务器，如smtp.qq.com smtp.163.com
+# MAIL_USER = "******@qq.com"  # 发送邮箱的用户名，如xxxxxx@qq.com xxx@163.com
+# MAIL_PASS = "**********"  # 发送邮箱的密码（注：QQ邮箱需要开启SMTP服务后在此填写授权码）
+# RECEIVER = "******@qq.com"  # 收件邮箱，格式同发件邮箱
+
+MAIL_HOST = input("请输入SMTP服务器，如smtp.qq.com smtp.163.com:")
+MAIL_USER = input("请输入发送邮箱的用户名，如****@qq.com:")
+MAIL_PASS = input("请输入发送邮箱的密码（注：QQ邮箱需要开启SMTP服务后在此填写授权码）:")
+RECEIVER = input("请输入收件邮箱，格式同发件邮箱:")
 cookies = {'eai-sess': '', }
 headers = {
     'Accept': 'application/json, text/javascript, */*; q=0.01',
@@ -48,7 +53,10 @@ def get_sess():
         'sec-ch-ua-mobile': '?0',
         'sec-ch-ua-platform': '"Windows"',
     }
-    ndata = {'username': "********", 'password': "********", }  # 请填写自己的学号和密码
+    username = input("请输入学号:")
+    password = input("请输入密码:")
+    ndata = {'username': username, 'password': password}
+    # ndata = {'username': "********", 'password': "********", }  # 请填写自己的学号和密码
     try:
         response = requests.post('https://app.buaa.edu.cn/uc/wap/login/check', headers=headerss, data=ndata)
         resp = json.loads(response.text)
