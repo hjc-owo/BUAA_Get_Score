@@ -15,6 +15,8 @@ MAIL_HOST = input("请输入SMTP服务器，如smtp.qq.com smtp.163.com:")
 MAIL_USER = input("请输入发送邮箱的用户名，如****@qq.com:")
 MAIL_PASS = input("请输入发送邮箱的密码（注：QQ邮箱需要开启SMTP服务后在此填写授权码）:")
 RECEIVER = input("请输入收件邮箱，格式同发件邮箱:")
+username = input("请输入学号:")
+password = input("请输入密码:")
 cookies = {'eai-sess': '', }
 headers = {
     'Accept': 'application/json, text/javascript, */*; q=0.01',
@@ -53,8 +55,6 @@ def get_sess():
         'sec-ch-ua-mobile': '?0',
         'sec-ch-ua-platform': '"Windows"',
     }
-    username = input("请输入学号:")
-    password = input("请输入密码:")
     ndata = {'username': username, 'password': password}
     # ndata = {'username': "********", 'password': "********", }  # 请填写自己的学号和密码
     try:
