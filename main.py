@@ -126,6 +126,8 @@ while True:
         cookies['eai-sess'] = get_sess()
         if cookies['eai-sess'] == 'error':
             print("登录失败，请重新输入账号密码!!!")
+            username = input("请输入学号:")
+            password = input("请输入密码:")
         else:
             print("登录成功")
             break
