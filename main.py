@@ -136,7 +136,7 @@ while True:
         time.sleep(60)
         continue
     tmp = [i for i in raw if i['cj'] is not None]
-    if len(tmp) != len(base):
+    if len(tmp) > len(base):
         newobjs = [i['km'] for i in tmp if i not in base]
         send_mail("新出了{}门：{}".format(len(newobjs), "，".join(newobjs)), to_content(tmp))
         base = tmp
