@@ -6,17 +6,33 @@ from email.mime.text import MIMEText
 
 import requests
 
+# 两种方式配置邮箱信息
+# 1.直接在这里填写
 # MAIL_HOST = "smtp.qq.com"  # 设置SMTP服务器，如smtp.qq.com smtp.163.com
 # MAIL_USER = "******@qq.com"  # 发送邮箱的用户名，如xxxxxx@qq.com xxx@163.com
 # MAIL_PASS = "**********"  # 发送邮箱的密码（注：QQ邮箱需要开启SMTP服务后在此填写授权码）
 # RECEIVER = "******@qq.com"  # 收件邮箱，格式同发件邮箱
 
+# 2.运行时输入
 MAIL_HOST = input("请输入SMTP服务器，如smtp.qq.com smtp.163.com:")
 MAIL_USER = input("请输入发送邮箱的用户名，如****@qq.com:")
 MAIL_PASS = input("请输入发送邮箱的密码（注：QQ邮箱需要开启SMTP服务后在此填写授权码）:")
 RECEIVER = input("请输入收件邮箱，格式同发件邮箱:")
+
+# 两种方式配置学号密码
+# 1.直接在这里填写
+# ndata = {'username': "********", 'password': "********", }  # 请填写自己的学号和密码
+
+# 2.运行时输入
 username = input("请输入学号:")
 password = input("请输入密码:")
+ndata = {'username': username, 'password': password}
+
+# 请填写想要查询的学年和学期
+year = '2022-2023'  # 学年
+term = '1'  # 1 2 3分别代表秋 春 夏季学期
+
+# 下面的代码不需要修改
 cookies = {'eai-sess': '', }
 headers = {
     'Accept': 'application/json, text/javascript, */*; q=0.01',
@@ -55,8 +71,6 @@ def get_sess():
         'sec-ch-ua-mobile': '?0',
         'sec-ch-ua-platform': '"Windows"',
     }
-    ndata = {'username': username, 'password': password}
-    # ndata = {'username': "********", 'password': "********", }  # 请填写自己的学号和密码
     try:
         response = requests.post('https://app.buaa.edu.cn/uc/wap/login/check', headers=headerss, data=ndata)
         resp = json.loads(response.text)
@@ -131,7 +145,7 @@ while True:
         else:
             print("登录成功")
             break
-    raw = get_score_list('2022-2023', '1')  # 在这里改你要查询的学期 1 2 3分别代表秋 春 夏季学期
+    raw = get_score_list(year, term)
     if raw == "error":
         time.sleep(60)
         continue
