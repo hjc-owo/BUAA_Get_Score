@@ -109,7 +109,7 @@ def send_mail(title, content):
     sender = mail_user
     receivers = RECEIVER
     message = MIMEText(content, 'plain', 'utf-8')
-    message['From'] = Header(sender, 'utf-8')  # 发件人
+    message['From'] = Header(sender)  # 发件人
     message['To'] = Header(receivers, 'utf-8')  # 收件人
     subject = title  # 主题
     message['Subject'] = Header(subject, 'utf-8')
