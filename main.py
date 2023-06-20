@@ -30,7 +30,7 @@ ndata = {'username': username, 'password': password}
 
 # 请填写想要查询的学年和学期
 year = '2022-2023'  # 学年
-term = '1'  # 1 2 3分别代表秋 春 夏季学期
+term = '2'  # 1 2 3分别代表秋 春 夏季学期
 
 # 下面的代码不需要修改
 cookies = {'eai-sess': '', }
@@ -135,15 +135,21 @@ def to_content(lis):
     return msg
 
 
+succeed = False
+right_username = ""
+right_password = ""
 while True:
     while True:
         cookies['eai-sess'] = get_sess()
         if cookies['eai-sess'] == 'error':
             print("登录失败，请重新输入账号密码!!!")
-            username = input("请输入学号:")
-            password = input("请输入密码:")
+            username = right_username if succeed else input("请输入学号:")
+            password = right_password if succeed else input("请输入密码:")
         else:
             print("登录成功")
+            succeed = True
+            right_username = username
+            right_password = password
             break
     raw = get_score_list(year, term)
     if raw == "error":
