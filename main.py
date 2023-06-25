@@ -2,6 +2,7 @@ import json
 import smtplib
 import time
 from email.header import Header
+from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
 import requests
@@ -90,7 +91,7 @@ def get_score_list(year, xq):  # year 格式为 2020-2021 字符串  xq取值为
                                  cookies=cookies,
                                  headers=headers,
                                  data=data)
-        print("请求时间{}".format(time.ctime()))
+        print("请求时间：", time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()))
     except:
         return "error"
     dic = json.loads(response.text)
@@ -98,6 +99,25 @@ def get_score_list(year, xq):  # year 格式为 2020-2021 字符串  xq取值为
     for i in dic['d'].values():
         res.append({'km': i['kcmc'], 'cj': i['kccj'], 'xf': i['xf']})
     return res
+
+
+def to_content(lis):
+    msg = '''
+    <html>
+    <head></head>
+    <body>
+    <p>本学期的课程成绩如下:</p>
+    <table border="1">
+    <tr>
+    <td>课程</td>
+    <td>成绩</td>
+    <td>学分</td>
+    </tr>
+    '''
+    for i in lis:
+        msg += "<tr><td>{}</td><td>{}</td><td>{}</td></tr>".format(i['km'], i['cj'], i['xf'])
+    msg += "</table></body></html>"
+    return msg
 
 
 def send_mail(title, content):
@@ -108,31 +128,23 @@ def send_mail(title, content):
     mail_pass = MAIL_PASS
     sender = mail_user
     receivers = RECEIVER
-    message = MIMEText(content, 'plain', 'utf-8')
+    message = MIMEMultipart('related')
     message['From'] = Header(sender)  # 发件人
     message['To'] = Header(receivers, 'utf-8')  # 收件人
     subject = title  # 主题
     message['Subject'] = Header(subject, 'utf-8')
-    print('Prepare success')
+    message.attach(MIMEText(content, 'html', 'utf-8'))
+    print('准备发送邮件')
     try:
         smtpObj = smtplib.SMTP()
         smtpObj.connect(mail_host, 25)  # 25 为 SMTP 端口号
-        print('Connect success')
+        print('连接成功')
         smtpObj.login(mail_user, mail_pass)
-        print('Login success')
+        print('邮箱登录成功')
         smtpObj.sendmail(sender, receivers, str(message))
         print("邮件发送成功")
     except smtplib.SMTPException:
-        print("ERROR：无法发送邮件")
-
-
-def to_content(lis):
-    msg = "本学期的课程成绩如下:\n"
-    tplt = "{0:{3}^10}\t{1:{3}^10}\t{2:^10}\n"
-    msg += tplt.format("课程", "成绩", "学分", chr(12288))
-    for i in lis:
-        msg += tplt.format(i['km'], i['cj'], i['xf'], chr(12288))
-    return msg
+        print("无法发送邮件！")
 
 
 succeed = False
@@ -148,8 +160,8 @@ while True:
         else:
             print("登录成功")
             succeed = True
-            right_username = username
-            right_password = password
+            right_username = ndata['username']
+            right_password = ndata['password']
             break
     raw = get_score_list(year, term)
     if raw == "error":
@@ -157,7 +169,7 @@ while True:
         continue
     tmp = [i for i in raw if i['cj'] is not None]
     if len(tmp) > len(base):
-        newobjs = [i['km'] for i in tmp if i not in base]
-        send_mail("新出了{}门：{}".format(len(newobjs), "，".join(newobjs)), to_content(tmp))
+        new_objs = [i['km'] for i in tmp if i not in base]
+        send_mail("新出了{}门：{}".format(len(new_objs), "，".join(new_objs)), to_content(tmp))
         base = tmp
     time.sleep(60)
