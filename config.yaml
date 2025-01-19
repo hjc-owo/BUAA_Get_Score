@@ -1,0 +1,14 @@
+email:
+  enabled: true                      # 是否启用邮件服务
+  smtp_host: "smtp.qq.com"           # SMTP服务器地址
+  smtp_user: "**********@qq.com"     # 发件邮箱的用户名
+  smtp_pass: "**********"            # 发件邮箱的密码（如果是QQ邮箱则为授权码）
+  receiver: "**********@qq.com"      # 收件邮箱
+
+credentials:
+  username: "**********"             # 学号
+  password: "**********"             # 密码
+
+query:
+  year: "2024-2025"                  # 学年
+  term: "1"                          # 学期 (1=秋季, 2=春季, 3=夏季)
